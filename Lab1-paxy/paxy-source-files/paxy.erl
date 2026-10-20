@@ -1,16 +1,33 @@
 -module(paxy).
 -export([start/1, stop/0, stop/1]).
 
--define(RED, {255,0,0}).
--define(BLUE, {0,0,255}).
--define(GREEN, {0,255,0}).
+-define(RED, {255,0,0}). %Original
+-define(BLUE, {0,0,255}). % Original
+-define(GREEN, {0,255,0}). % Original
+-define(YELLOW, {255,255,0}). %Added for p = 5
+-define(PURPLE, {255,0,255}). %Added for p = 5
+-define(CYAN, {0,255,255}). %Added for p = 7
+-define(ORANGE, {255,128,0}). %Added for p = 7
+-define(PINK, {255,105,180}). %Added for p = 9
+-define(GREY, {128,128,128}). %Added for p = 9
+
 
 % Sleep is a list with the initial sleep time for each proposer
 start(Sleep) ->
   AcceptorNames = ["Homer", "Marge", "Bart", "Lisa", "Maggie"],
+  %AcceptorNames = ["Homer", "Marge", "Bart", "Lisa", "Maggie", "Ida", "Lars"],
+  %AcceptorNames = ["Homer", "Marge", "Bart", "Lisa", "Maggie", "Ida", "Lars", "Frank", "Maria"],
+  %AcceptorNames = ["Homer", "Marge", "Bart", "Lisa", "Maggie", "Ida", "Lars", "Frank", "Maria", "Simen", "Greta"],
+
+
   AccRegister = [homer, marge, bart, lisa, maggie],
-  ProposerNames = [{"Fry", ?RED}, {"Bender", ?GREEN}, {"Leela", ?BLUE}],
-  PropInfo = [{fry, ?RED}, {bender, ?GREEN}, {leela, ?BLUE}],
+  %AccRegister = [homer, marge, bart, lisa, maggie, ida, lars],
+  %AccRegister = [homer, marge, bart, lisa, maggie, ida, lars, frank, maria],
+  %AccRegister = [homer, marge, bart, lisa, maggie, ida, lars, frank, maria, simen, greta],
+
+  ProposerNames = [{"Fry", ?RED}, {"Bender", ?GREEN}, {"Leela", ?BLUE}, {"Herman", ?YELLOW}, {"Gary", ?PURPLE}, {"Ole", ?CYAN}, {"Dolle", ?ORANGE}, {"Doffen", ?PINK}, {"Barney", ?GREY}],
+  PropInfo = [{fry, ?RED}, {bender, ?GREEN}, {leela, ?BLUE}, {herman, ?YELLOW}, {gary, ?PURPLE}, {ole, ?CYAN}, {dolle, ?ORANGE}, {doffen, ?PINK}, {barney, ?GREY}],
+
   register(gui, spawn(fun() -> gui:start(AcceptorNames, ProposerNames) end)),
   gui ! {reqState, self()},
   receive
@@ -71,5 +88,3 @@ stop(Name) ->
     Pid ->
       Pid ! stop
   end.
-
- 
