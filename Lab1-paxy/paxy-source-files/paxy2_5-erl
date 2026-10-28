@@ -1,0 +1,90 @@
+-module(paxy).
+-export([start/1, stop/0, stop/1]).
+
+-define(RED, {255,0,0}).
+-define(BLUE, {0,0,255}).
+-define(GREEN, {0,255,0}).
+
+-define(ACC_NODE, 'paxy-acc@Mac'). %Task 2.5
+-define(PRO_NODE, 'paxy-pro@Mac'). %Task 2.5
+
+% Sleep is a list with the initial sleep time for each proposer
+start(Sleep) ->
+  AcceptorNames = ["Homer", "Marge", "Bart", "Lisa", "Maggie"],
+  AccRegister = [homer, marge, bart, lisa, maggie],
+  ProposerNames = [{"Fry", ?RED}, {"Bender", ?GREEN}, {"Leela", ?BLUE}],
+  PropInfo = [{fry, ?RED}, {bender, ?GREEN}, {leela, ?BLUE}],
+  register(gui, spawn(fun() -> gui:start(AcceptorNames, ProposerNames) end)),
+  gui ! {reqState, self()},
+  receive
+    {reqState, State} ->
+      {AccIds, PropIds} = State,
+      % Task 2.5: create the acceptors on paxy-acc and wait until they are registered
+      Self = self(),
+      spawn(?ACC_NODE, fun() ->
+        start_acceptors(AccIds, AccRegister),
+        Self ! acceptors_ready
+      end),
+      receive
+        acceptors_ready -> ok
+      end,
+      % Task 2.5: the proposers reach the remote acceptors as {Name, Node}
+      AccRemote = [{Name, ?ACC_NODE} || Name <- AccRegister],
+      % Task 2.5: create the proposers on paxy-pro
+      spawn(?PRO_NODE, fun() ->
+        Begin = erlang:monotonic_time(),
+        start_proposers(PropIds, PropInfo, AccRemote, Sleep, self()),
+        wait_proposers(length(PropIds)),
+        End = erlang:monotonic_time(),
+        Elapsed = erlang:convert_time_unit(End-Begin, native, millisecond),
+        io:format("[Paxy] Total elapsed time: ~w ms~n", [Elapsed])
+      end)
+  end.
+
+start_acceptors(AccIds, AccReg) ->
+  case AccIds of
+    [] ->
+      ok;
+    [AccId|Rest] ->
+      [RegName|RegNameRest] = AccReg,
+      register(RegName, acceptor:start(RegName, AccId)),
+      start_acceptors(Rest, RegNameRest)
+  end.
+
+start_proposers(PropIds, PropInfo, Acceptors, Sleep, Main) ->
+  case PropIds of
+    [] ->
+      ok;
+    [PropId|Rest] ->
+      [{RegName, Colour}|RestInfo] = PropInfo,
+      [FirstSleep|RestSleep] = Sleep,
+      proposer:start(RegName, Colour, Acceptors, FirstSleep, PropId, Main),
+      start_proposers(Rest, RestInfo, Acceptors, RestSleep, Main)
+  end.
+
+wait_proposers(0) ->
+  ok;
+wait_proposers(N) ->
+  receive
+    done ->
+      wait_proposers(N-1)
+  end.
+
+stop() ->
+  stop({homer, ?ACC_NODE}),
+  stop({marge, ?ACC_NODE}),
+  stop({bart, ?ACC_NODE}),
+  stop({lisa, ?ACC_NODE}),
+  stop({maggie, ?ACC_NODE}),
+  stop(gui).
+
+% Task 2.5: remote acceptor, the name is resolved on its own node
+stop({Name, Node}) ->
+  {Name, Node} ! stop;
+stop(Name) ->
+  case whereis(Name) of
+    undefined ->
+      ok;
+    Pid ->
+      Pid ! stop
+  end.
