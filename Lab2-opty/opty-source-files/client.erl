@@ -1,15 +1,22 @@
 -module(client).
 -export([start/5]).
 
+%% ORIGINAL:
+%% start(ClientID, Entries, Reads, Writes, Server) ->
+%%     spawn(fun() -> open(ClientID, Entries, Reads, Writes, Server, 0, 0) end).
+
+%% PART 3 (vi): Entries is now the list of store indices this client accesses
 start(ClientID, Entries, Reads, Writes, Server) ->
-    spawn(fun() -> open(ClientID, Entries, Reads, Writes, Server, 0, 0) end).
+    spawn(fun() -> open(ClientID, list_to_tuple(Entries), Reads, Writes, Server, 0, 0) end).
 
 open(ClientID, Entries, Reads, Writes, Server, Total, Ok) ->
     Server ! {open, self()},
     receive
         {stop, From} ->
             io:format("~w: Transactions TOTAL:~w, OK:~w, -> ~w % ~n",
-            [ClientID, Total, Ok, 100*Ok/Total]),
+            %% ORIGINAL: [ClientID, Total, Ok, 100*Ok/Total]),
+            %% PART 3: max/2 avoids a crash when a client made no transactions
+            [ClientID, Total, Ok, 100*Ok/max(1, Total)]),
             From ! {done, self()},
             ok;
         {transaction, Validator, Store} ->
@@ -42,14 +49,18 @@ do_transaction(ClientID, Entries, Reads, Writes, Handler) ->
 
 do_read(Entries, Handler) ->
     Ref = make_ref(),
-    Num = rand:uniform(Entries),
+    %% ORIGINAL: Num = rand:uniform(Entries),
+    %% PART 3 (vi): pick a random entry from this client's subset
+    Num = element(rand:uniform(tuple_size(Entries)), Entries),
     Handler ! {read, Ref, Num},
     receive
         {value, Ref, Value} -> Value
     end.
 
 do_write(Entries, Handler, Value) ->
-    Num = rand:uniform(Entries),
+    %% ORIGINAL: Num = rand:uniform(Entries),
+    %% PART 3 (vi): pick a random entry from this client's subset
+    Num = element(rand:uniform(tuple_size(Entries)), Entries),
     Handler ! {write, Num, Value}.
 
 do_commit(Handler) ->

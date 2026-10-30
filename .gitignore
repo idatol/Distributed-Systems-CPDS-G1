@@ -1,0 +1,3 @@
+# Erlang build output
+*.beam
+erl_crash.dump
