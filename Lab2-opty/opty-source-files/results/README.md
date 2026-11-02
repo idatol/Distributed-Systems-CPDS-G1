@@ -203,11 +203,11 @@ opty:start(4, 1000, 5, 20, 5).
 ## 6. Experiment (v): read/write ratio (Reads + Writes = 10)
 
 ```erlang
-opty:start(4, 1000, 10, 0, 5).   % only reads
+opty:start(4, 1000, 10, 0, 5).
 opty:start(4, 1000, 7, 3, 5).
-opty:start(4, 1000, 5, 5, 5).    % 1:1
+opty:start(4, 1000, 5, 5, 5).
 opty:start(4, 1000, 3, 7, 5).
-opty:start(4, 1000, 0, 10, 5).   % only writes
+opty:start(4, 1000, 0, 10, 5).
 ```
 
 ### Results
@@ -238,14 +238,6 @@ opty:start(4, 1000, 0, 10, 5).   % only writes
 
 
 ## 7. Experiment (vi): percentage of accessed entries
-
-This experiment uses `opty:start/6`. The extra sixth argument, `Subset`, is the number of entries each client accesses. Each client gets its own random, not necessarily contiguous, subset of the store of that size, and `do_read`/`do_write` in `client.erl` pick only from that subset. `opty:start/5` is the same as `Subset = Entries`, i.e. the whole store.
-
-Recompile `client` and `opty` after the change:
-
-```erlang
-c(client), c(opty).
-```
 
 Baseline with 1000 entries, testing 1%, 10%, 25%, 50%, 75% and 100% of the store:
 
@@ -333,11 +325,3 @@ opty:start(4, 1000, 5, 5, 5, 1000).
     2: Transactions TOTAL:90345, OK:86615, -> 95.87138192484366 % 
     4: Transactions TOTAL:90317, OK:86623, -> 95.90996157976903 % 
     3: Transactions TOTAL:90316, OK:86613, -> 95.89995128216485 % 
-
-> The subsets are random, so small subsets give very different results from run
-> to run. Run each of those configurations several times.
-
-## Notes
-
-- Each configuration is run 2–3 times, because results vary between runs.
-- The success rate is `OK / TOTAL` per client, as printed after each run.
