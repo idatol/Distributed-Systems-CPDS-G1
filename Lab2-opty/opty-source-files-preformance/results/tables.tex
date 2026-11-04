@@ -1,0 +1,167 @@
+% ---------- entries ----------
+\begin{table}[h]
+\centering
+\caption{Manual runs: number of entries.}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Entries & Transactions & Committed & Success rate (\%) \\
+\hline
+10 & 457\,887 & 168\,751 & 36.85 \\
+50 & 401\,704 & 242\,117 & 60.27 \\
+100 & 387\,876 & 282\,021 & 72.71 \\
+500 & 367\,623 & 339\,277 & 92.29 \\
+1000 & 362\,649 & 347\,939 & 95.94 \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Average of 10 runs: number of entries.}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Entries & Transactions & Committed & Success rate (\%) \\
+\hline
+10 & 442\,398 & 163\,388 & 36.93 \\
+50 & 377\,742 & 227\,827 & 60.31 \\
+100 & 345\,728 & 251\,108 & 72.63 \\
+500 & 321\,718 & 296\,615 & 92.20 \\
+1000 & 323\,566 & 310\,511 & 95.97 \\
+\hline
+\end{tabular}
+\end{table}
+
+% ---------- reads ----------
+\begin{table}[h]
+\centering
+\caption{Manual runs: reads per transaction (5 writes).}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Reads & Transactions & Committed & Success rate (\%) \\
+\hline
+0 & 1\,145\,135 & 1\,145\,135 & 100.00 \\
+1 & 736\,116 & 729\,848 & 99.15 \\
+5 & 362\,549 & 348\,137 & 96.02 \\
+10 & 227\,473 & 210\,525 & 92.55 \\
+20 & 128\,891 & 111\,768 & 86.72 \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Average of 10 runs: reads per transaction (5 writes).}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Reads & Transactions & Committed & Success rate (\%) \\
+\hline
+0 & 998\,559 & 998\,559 & 100.00 \\
+1 & 717\,354 & 711\,110 & 99.13 \\
+5 & 358\,017 & 343\,500 & 95.95 \\
+10 & 206\,914 & 191\,583 & 92.59 \\
+20 & 107\,425 & 93\,267 & 86.82 \\
+\hline
+\end{tabular}
+\end{table}
+
+% ---------- writes ----------
+\begin{table}[h]
+\centering
+\caption{Manual runs: writes per transaction (5 reads).}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Writes & Transactions & Committed & Success rate (\%) \\
+\hline
+0 & 398\,463 & 398\,463 & 100.00 \\
+1 & 396\,068 & 392\,794 & 99.17 \\
+5 & 367\,669 & 352\,821 & 95.96 \\
+10 & 323\,647 & 298\,356 & 92.19 \\
+20 & 275\,520 & 235\,026 & 85.30 \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Average of 10 runs: writes per transaction (5 reads).}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Writes & Transactions & Committed & Success rate (\%) \\
+\hline
+0 & 349\,832 & 349\,832 & 100.00 \\
+1 & 342\,734 & 339\,892 & 99.17 \\
+5 & 314\,194 & 301\,451 & 95.94 \\
+10 & 278\,145 & 256\,425 & 92.19 \\
+20 & 230\,437 & 196\,344 & 85.21 \\
+\hline
+\end{tabular}
+\end{table}
+
+% ---------- ratio ----------
+\begin{table}[h]
+\centering
+\caption{Manual runs: read/write ratio (10 operations).}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Reads/Writes & Transactions & Committed & Success rate (\%) \\
+\hline
+10/0 & 250\,127 & 250\,127 & 100.00 \\
+7/3 & 306\,199 & 295\,886 & 96.63 \\
+5/5 & 365\,716 & 350\,960 & 95.97 \\
+3/7 & 457\,263 & 441\,069 & 96.46 \\
+0/10 & 818\,046 & 818\,046 & 100.00 \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Average of 10 runs: read/write ratio (10 operations).}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Reads/Writes & Transactions & Committed & Success rate (\%) \\
+\hline
+10/0 & 230\,391 & 230\,391 & 100.00 \\
+7/3 & 247\,037 & 238\,712 & 96.63 \\
+5/5 & 284\,128 & 272\,625 & 95.95 \\
+3/7 & 379\,049 & 365\,586 & 96.45 \\
+0/10 & 614\,925 & 614\,925 & 100.00 \\
+\hline
+\end{tabular}
+\end{table}
+
+% ---------- subset ----------
+\begin{table}[h]
+\centering
+\caption{Manual runs: entries accessed per client (1000 entries). Configurations run more than once show the mean of the manual runs.}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Entries per client & Transactions & Committed & Success rate (\%) \\
+\hline
+10 (1\%) & 405\,230 & 398\,140 & 98.25 \\
+100 (10\%) & 357\,200 & 342\,342 & 95.84 \\
+250 (25\%) & 367\,101 & 352\,851 & 96.12 \\
+500 (50\%) & 369\,443 & 354\,676 & 96.00 \\
+750 (75\%) & 370\,888 & 356\,061 & 96.00 \\
+1000 (100\%) & 366\,188 & 351\,327 & 95.94 \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Average of 10 runs: entries accessed per client (1000 entries).}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Entries per client & Transactions & Committed & Success rate (\%) \\
+\hline
+10 (1\%) & 359\,228 & 348\,763 & 97.11 \\
+100 (10\%) & 308\,689 & 296\,586 & 96.08 \\
+250 (25\%) & 309\,841 & 297\,764 & 96.10 \\
+500 (50\%) & 320\,001 & 307\,204 & 96.00 \\
+750 (75\%) & 322\,901 & 309\,834 & 95.95 \\
+1000 (100\%) & 317\,908 & 305\,016 & 95.94 \\
+\hline
+\end{tabular}
+\end{table}
+
